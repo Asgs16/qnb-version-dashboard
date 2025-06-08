@@ -11,6 +11,7 @@ interface BuildInfo {
   component: string;
   env: string;
   version: string;
+  build_number: string;
   last_updated: string;
   status: 'success' | 'pending' | 'failed';
   deployment_id?: string;
@@ -24,46 +25,46 @@ const Index = () => {
 
   // Mock data that represents the actual QNB components
   const mockBuilds: BuildInfo[] = [
-    { component: "RAP", env: "prod", version: "v2.4.8", last_updated: "2025-06-08T10:30:00Z", status: "success" },
-    { component: "RAP", env: "pre-prod", version: "v2.4.9", last_updated: "2025-06-08T09:15:00Z", status: "success" },
-    { component: "Prod (API) QNB", env: "prod", version: "v1.7.2", last_updated: "2025-06-08T08:45:00Z", status: "success" },
-    { component: "Prod (API) QNB", env: "pre-prod", version: "v1.7.3", last_updated: "2025-06-08T11:20:00Z", status: "pending" },
-    { component: "Replica Quote QNB", env: "prod", version: "v3.1.5", last_updated: "2025-06-08T07:30:00Z", status: "success" },
-    { component: "Replica Quote QNB", env: "pre-prod", version: "v3.1.6", last_updated: "2025-06-08T10:00:00Z", status: "success" },
-    { component: "AGGR", env: "prod", version: "v4.2.1", last_updated: "2025-06-08T06:15:00Z", status: "success" },
-    { component: "AGGR", env: "pre-prod", version: "v4.2.2", last_updated: "2025-06-08T09:45:00Z", status: "failed" },
-    { component: "DIRECT QNB", env: "prod", version: "v5.0.4", last_updated: "2025-06-08T08:00:00Z", status: "success" },
-    { component: "DIRECT QNB", env: "pre-prod", version: "v5.0.5", last_updated: "2025-06-08T10:30:00Z", status: "success" },
-    { component: "PLUS QNB", env: "prod", version: "v2.8.3", last_updated: "2025-06-08T07:45:00Z", status: "success" },
-    { component: "PLUS QNB", env: "pre-prod", version: "v2.8.4", last_updated: "2025-06-08T11:00:00Z", status: "pending" },
-    { component: "REPLICA QNB", env: "prod", version: "v1.9.7", last_updated: "2025-06-08T06:30:00Z", status: "success" },
-    { component: "REPLICA QNB", env: "pre-prod", version: "v1.9.8", last_updated: "2025-06-08T09:15:00Z", status: "success" },
-    { component: "MI QNB", env: "prod", version: "v3.5.2", last_updated: "2025-06-08T08:20:00Z", status: "success" },
-    { component: "MI QNB", env: "pre-prod", version: "v3.5.3", last_updated: "2025-06-08T10:45:00Z", status: "success" },
-    { component: "Health GMC QNB", env: "prod", version: "v2.3.1", last_updated: "2025-06-08T07:00:00Z", status: "success" },
-    { component: "Health GMC QNB", env: "pre-prod", version: "v2.3.2", last_updated: "2025-06-08T09:30:00Z", status: "success" },
-    { component: "BOT QNB", env: "prod", version: "v1.6.4", last_updated: "2025-06-08T06:45:00Z", status: "success" },
-    { component: "BOT QNB", env: "pre-prod", version: "v1.6.5", last_updated: "2025-06-08T10:15:00Z", status: "success" },
-    { component: "BOT-REPLICA QNB", env: "prod", version: "v1.6.4", last_updated: "2025-06-08T06:45:00Z", status: "success" },
-    { component: "BOT-REPLICA QNB", env: "pre-prod", version: "v1.6.5", last_updated: "2025-06-08T10:15:00Z", status: "success" },
-    { component: "DC QNB", env: "prod", version: "v4.1.8", last_updated: "2025-06-08T08:30:00Z", status: "success" },
-    { component: "DC QNB", env: "pre-prod", version: "v4.1.9", last_updated: "2025-06-08T11:15:00Z", status: "pending" },
-    { component: "DC-REPLICA QNB", env: "prod", version: "v4.1.8", last_updated: "2025-06-08T08:30:00Z", status: "success" },
-    { component: "DC-REPLICA QNB", env: "pre-prod", version: "v4.1.9", last_updated: "2025-06-08T11:15:00Z", status: "pending" },
-    { component: "Plus Health QNB", env: "prod", version: "v3.2.6", last_updated: "2025-06-08T07:15:00Z", status: "success" },
-    { component: "Plus Health QNB", env: "pre-prod", version: "v3.2.7", last_updated: "2025-06-08T09:45:00Z", status: "success" },
-    { component: "CCM QNB", env: "prod", version: "v2.1.3", last_updated: "2025-06-08T06:00:00Z", status: "success" },
-    { component: "CCM QNB", env: "pre-prod", version: "v2.1.4", last_updated: "2025-06-08T10:00:00Z", status: "success" },
-    { component: "Institutional QNB", env: "prod", version: "v1.4.2", last_updated: "2025-06-08T08:15:00Z", status: "success" },
-    { component: "Institutional QNB", env: "pre-prod", version: "v1.4.3", last_updated: "2025-06-08T10:30:00Z", status: "success" },
-    { component: "Payment QNB", env: "prod", version: "v5.3.1", last_updated: "2025-06-08T07:30:00Z", status: "success" },
-    { component: "Payment QNB", env: "pre-prod", version: "v5.3.2", last_updated: "2025-06-08T11:00:00Z", status: "success" },
-    { component: "Premium Plus QNB", env: "prod", version: "v2.7.4", last_updated: "2025-06-08T06:45:00Z", status: "success" },
-    { component: "Premium Plus QNB", env: "pre-prod", version: "v2.7.5", last_updated: "2025-06-08T09:30:00Z", status: "success" },
-    { component: "Premium Plus-REPLICA QNB", env: "prod", version: "v2.7.4", last_updated: "2025-06-08T06:45:00Z", status: "success" },
-    { component: "Premium Plus-REPLICA QNB", env: "pre-prod", version: "v2.7.5", last_updated: "2025-06-08T09:30:00Z", status: "success" },
-    { component: "Motor Plus QNB", env: "prod", version: "v3.8.2", last_updated: "2025-06-08T08:00:00Z", status: "success" },
-    { component: "Motor Plus QNB", env: "pre-prod", version: "v3.8.3", last_updated: "2025-06-08T10:45:00Z", status: "success" },
+    { component: "RAP", env: "prod", version: "v2.4.8", build_number: "#2048", last_updated: "2025-06-08T10:30:00Z", status: "success" },
+    { component: "RAP", env: "pre-prod", version: "v2.4.9", build_number: "#2049", last_updated: "2025-06-08T09:15:00Z", status: "success" },
+    { component: "Prod (API) QNB", env: "prod", version: "v1.7.2", build_number: "#1072", last_updated: "2025-06-08T08:45:00Z", status: "success" },
+    { component: "Prod (API) QNB", env: "pre-prod", version: "v1.7.3", build_number: "#1073", last_updated: "2025-06-08T11:20:00Z", status: "pending" },
+    { component: "Replica Quote QNB", env: "prod", version: "v3.1.5", build_number: "#3015", last_updated: "2025-06-08T07:30:00Z", status: "success" },
+    { component: "Replica Quote QNB", env: "pre-prod", version: "v3.1.6", build_number: "#3016", last_updated: "2025-06-08T10:00:00Z", status: "success" },
+    { component: "AGGR", env: "prod", version: "v4.2.1", build_number: "#4021", last_updated: "2025-06-08T06:15:00Z", status: "success" },
+    { component: "AGGR", env: "pre-prod", version: "v4.2.2", build_number: "#4022", last_updated: "2025-06-08T09:45:00Z", status: "failed" },
+    { component: "DIRECT QNB", env: "prod", version: "v5.0.4", build_number: "#5004", last_updated: "2025-06-08T08:00:00Z", status: "success" },
+    { component: "DIRECT QNB", env: "pre-prod", version: "v5.0.5", build_number: "#5005", last_updated: "2025-06-08T10:30:00Z", status: "success" },
+    { component: "PLUS QNB", env: "prod", version: "v2.8.3", build_number: "#2083", last_updated: "2025-06-08T07:45:00Z", status: "success" },
+    { component: "PLUS QNB", env: "pre-prod", version: "v2.8.4", build_number: "#2084", last_updated: "2025-06-08T11:00:00Z", status: "pending" },
+    { component: "REPLICA QNB", env: "prod", version: "v1.9.7", build_number: "#1097", last_updated: "2025-06-08T06:30:00Z", status: "success" },
+    { component: "REPLICA QNB", env: "pre-prod", version: "v1.9.8", build_number: "#1098", last_updated: "2025-06-08T09:15:00Z", status: "success" },
+    { component: "MI QNB", env: "prod", version: "v3.5.2", build_number: "#3052", last_updated: "2025-06-08T08:20:00Z", status: "success" },
+    { component: "MI QNB", env: "pre-prod", version: "v3.5.3", build_number: "#3053", last_updated: "2025-06-08T10:45:00Z", status: "success" },
+    { component: "Health GMC QNB", env: "prod", version: "v2.3.1", build_number: "#2031", last_updated: "2025-06-08T07:00:00Z", status: "success" },
+    { component: "Health GMC QNB", env: "pre-prod", version: "v2.3.2", build_number: "#2032", last_updated: "2025-06-08T09:30:00Z", status: "success" },
+    { component: "BOT QNB", env: "prod", version: "v1.6.4", build_number: "#1064", last_updated: "2025-06-08T06:45:00Z", status: "success" },
+    { component: "BOT QNB", env: "pre-prod", version: "v1.6.5", build_number: "#1065", last_updated: "2025-06-08T10:15:00Z", status: "success" },
+    { component: "BOT-REPLICA QNB", env: "prod", version: "v1.6.4", build_number: "#1064", last_updated: "2025-06-08T06:45:00Z", status: "success" },
+    { component: "BOT-REPLICA QNB", env: "pre-prod", version: "v1.6.5", build_number: "#1065", last_updated: "2025-06-08T10:15:00Z", status: "success" },
+    { component: "DC QNB", env: "prod", version: "v4.1.8", build_number: "#4018", last_updated: "2025-06-08T08:30:00Z", status: "success" },
+    { component: "DC QNB", env: "pre-prod", version: "v4.1.9", build_number: "#4019", last_updated: "2025-06-08T11:15:00Z", status: "pending" },
+    { component: "DC-REPLICA QNB", env: "prod", version: "v4.1.8", build_number: "#4018", last_updated: "2025-06-08T08:30:00Z", status: "success" },
+    { component: "DC-REPLICA QNB", env: "pre-prod", version: "v4.1.9", build_number: "#4019", last_updated: "2025-06-08T11:15:00Z", status: "pending" },
+    { component: "Plus Health QNB", env: "prod", version: "v3.2.6", build_number: "#3026", last_updated: "2025-06-08T07:15:00Z", status: "success" },
+    { component: "Plus Health QNB", env: "pre-prod", version: "v3.2.7", build_number: "#3027", last_updated: "2025-06-08T09:45:00Z", status: "success" },
+    { component: "CCM QNB", env: "prod", version: "v2.1.3", build_number: "#2013", last_updated: "2025-06-08T06:00:00Z", status: "success" },
+    { component: "CCM QNB", env: "pre-prod", version: "v2.1.4", build_number: "#2014", last_updated: "2025-06-08T10:00:00Z", status: "success" },
+    { component: "Institutional QNB", env: "prod", version: "v1.4.2", build_number: "#1042", last_updated: "2025-06-08T08:15:00Z", status: "success" },
+    { component: "Institutional QNB", env: "pre-prod", version: "v1.4.3", build_number: "#1043", last_updated: "2025-06-08T10:30:00Z", status: "success" },
+    { component: "Payment QNB", env: "prod", version: "v5.3.1", build_number: "#5031", last_updated: "2025-06-08T07:30:00Z", status: "success" },
+    { component: "Payment QNB", env: "pre-prod", version: "v5.3.2", build_number: "#5032", last_updated: "2025-06-08T11:00:00Z", status: "success" },
+    { component: "Premium Plus QNB", env: "prod", version: "v2.7.4", build_number: "#2074", last_updated: "2025-06-08T06:45:00Z", status: "success" },
+    { component: "Premium Plus QNB", env: "pre-prod", version: "v2.7.5", build_number: "#2075", last_updated: "2025-06-08T09:30:00Z", status: "success" },
+    { component: "Premium Plus-REPLICA QNB", env: "prod", version: "v2.7.4", build_number: "#2074", last_updated: "2025-06-08T06:45:00Z", status: "success" },
+    { component: "Premium Plus-REPLICA QNB", env: "pre-prod", version: "v2.7.5", build_number: "#2075", last_updated: "2025-06-08T09:30:00Z", status: "success" },
+    { component: "Motor Plus QNB", env: "prod", version: "v3.8.2", build_number: "#3082", last_updated: "2025-06-08T08:00:00Z", status: "success" },
+    { component: "Motor Plus QNB", env: "pre-prod", version: "v3.8.3", build_number: "#3083", last_updated: "2025-06-08T10:45:00Z", status: "success" },
   ];
 
   useEffect(() => {
@@ -141,6 +142,12 @@ const Index = () => {
             <span className="text-sm text-muted-foreground">Version:</span>
             <Badge variant="outline" className="font-mono">
               {build.version}
+            </Badge>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-muted-foreground">Build Number:</span>
+            <Badge variant="outline" className="font-mono text-blue-600">
+              {build.build_number}
             </Badge>
           </div>
           <div className="flex justify-between items-center">
