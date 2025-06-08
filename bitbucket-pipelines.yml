@@ -1,0 +1,83 @@
+
+# Bitbucket Pipelines configuration for QNB Build Version Tracker
+# This pipeline should be added to your main deployment repository
+
+image: atlassian/default-image:3
+
+definitions:
+  services:
+    docker:
+      memory: 2048
+
+pipelines:
+  default:
+    - step:
+        name: Build and Deploy Application
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          # Your existing build and deployment steps here
+          - echo "Building and deploying application..."
+          # Add your existing deployment commands
+          
+    - step:
+        name: Update QNB Build Dashboard
+        image: amazon/aws-cli:latest
+        script:
+          # Install required tools
+          - yum update -y
+          - yum install -y python3 jq
+          
+          # Configure AWS credentials from repository variables
+          - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+          - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+          - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+          
+          # Download and execute the build tracking script
+          - chmod +x src/scripts/deployment-script.sh
+          - ./src/scripts/deployment-script.sh
+          
+        after-script:
+          # Optional: Send notification to Slack/Teams about dashboard update
+          - echo "QNB Build Dashboard has been updated"
+
+  branches:
+    master:
+      - step:
+          name: Production Deployment
+          deployment: production
+          script:
+            # Your production deployment steps
+            - echo "Deploying to production..."
+            
+      - step:
+          name: Update Production Build Status
+          image: amazon/aws-cli:latest
+          script:
+            - export ENVIRONMENT="prod"
+            - chmod +x src/scripts/deployment-script.sh
+            - ./src/scripts/deployment-script.sh
+
+    develop:
+      - step:
+          name: Pre-Production Deployment
+          deployment: staging
+          script:
+            # Your pre-production deployment steps
+            - echo "Deploying to pre-production..."
+            
+      - step:
+          name: Update Pre-Prod Build Status
+          image: amazon/aws-cli:latest
+          script:
+            - export ENVIRONMENT="pre-prod"
+            - chmod +x src/scripts/deployment-script.sh
+            - ./src/scripts/deployment-script.sh
+
+# Repository Variables to set in Bitbucket:
+# AWS_ACCESS_KEY_ID: Your AWS access key
+# AWS_SECRET_ACCESS_KEY: Your AWS secret key  
+# AWS_DEFAULT_REGION: Your AWS region (e.g., us-east-1)
+# S3_BUCKET_NAME: Your S3 bucket name for storing builds.json

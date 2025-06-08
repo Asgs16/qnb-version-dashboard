@@ -1,73 +1,154 @@
-# Welcome to your Lovable project
 
-## Project info
+# QNB Build Version Dashboard - Digit Insurance
 
-**URL**: https://lovable.dev/projects/59db2e38-7f8f-4a98-b1b2-5d4ac313c052
+A real-time dashboard for tracking QNB (Quote Number Builder) component builds across production and pre-production environments.
 
-## How can I edit this code?
+## 🚀 Features
 
-There are several ways of editing your application.
+- **Real-time Build Tracking**: Monitor all QNB components across environments
+- **Environment Separation**: Clear distinction between Production and Pre-Production builds
+- **Auto-refresh**: Automatic updates every 5 minutes
+- **Status Indicators**: Visual status for successful, pending, and failed deployments
+- **Responsive Design**: Works perfectly on desktop and mobile devices
+- **AWS Integration**: Seamlessly integrates with AWS S3 for data storage
 
-**Use Lovable**
+## 🏗️ QNB Components Tracked
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/59db2e38-7f8f-4a98-b1b2-5d4ac313c052) and start prompting.
+- RAP
+- Prod (API) QNB
+- Replica Quote QNB  
+- AGGR
+- DIRECT QNB
+- PLUS QNB
+- REPLICA QNB
+- MI QNB
+- Health GMC QNB
+- BOT QNB
+- BOT-REPLICA QNB
+- DC QNB
+- DC-REPLICA QNB
+- Plus Health QNB
+- CCM QNB
+- Institutional QNB
+- Payment QNB
+- Premium Plus QNB
+- Premium Plus-REPLICA QNB
+- Motor Plus QNB
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ Setup Instructions
 
-**Use your preferred IDE**
+### 1. Frontend Deployment
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+The dashboard is built with React, TypeScript, and Tailwind CSS. Deploy it to your preferred hosting platform.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 2. AWS S3 Configuration
 
-Follow these steps:
+Create an S3 bucket to store the `builds.json` file:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+# Create S3 bucket
+aws s3 mb s3://your-qnb-builds-bucket --region us-east-1
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Set bucket policy for public read access (adjust for your security needs)
+aws s3api put-bucket-policy --bucket your-qnb-builds-bucket --policy file://bucket-policy.json
 ```
 
-**Edit a file directly in GitHub**
+### 3. Bitbucket Pipelines Integration
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Add the following repository variables in Bitbucket:
 
-**Use GitHub Codespaces**
+- `AWS_ACCESS_KEY_ID`: Your AWS access key
+- `AWS_SECRET_ACCESS_KEY`: Your AWS secret key
+- `AWS_DEFAULT_REGION`: Your AWS region
+- `S3_BUCKET_NAME`: Your S3 bucket name
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### 4. Customize Deployment Script
 
-## What technologies are used for this project?
+Edit `src/scripts/deployment-script.sh` to match your actual deployment infrastructure:
 
-This project is built with:
+```bash
+# For ECS services
+get_build_version() {
+    local component=$1
+    local env=$2
+    aws ecs describe-services --cluster ${env}-cluster --services ${component} \
+      --query 'services[0].taskDefinition' --output text | cut -d'/' -f2
+}
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# For Lambda functions
+get_build_version() {
+    local component=$1
+    local env=$2
+    aws lambda get-function --function-name ${component}-${env} \
+      --query 'Configuration.Version' --output text
+}
+```
 
-## How can I deploy this project?
+## 📊 Data Format
 
-Simply open [Lovable](https://lovable.dev/projects/59db2e38-7f8f-4a98-b1b2-5d4ac313c052) and click on Share -> Publish.
+The dashboard expects a JSON file with the following structure:
 
-## Can I connect a custom domain to my Lovable project?
+```json
+[
+  {
+    "component": "RAP",
+    "env": "prod",
+    "version": "v1.3.7",
+    "last_updated": "2025-06-08T08:00:00Z",
+    "status": "success",
+    "deployment_id": "deploy-1234567890"
+  }
+]
+```
 
-Yes, you can!
+## 🔧 Development
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```bash
+# Install dependencies
+npm install
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## 🚀 Deployment Flow
+
+1. **Code Push**: Developer pushes code to repository
+2. **Pipeline Trigger**: Bitbucket Pipelines automatically triggers
+3. **Application Deployment**: Your app gets deployed to AWS
+4. **Build Tracking**: Deployment script collects version information
+5. **S3 Update**: `builds.json` file gets updated in S3
+6. **Dashboard Refresh**: Frontend automatically fetches latest data
+
+## 🔒 Security Considerations
+
+- Store AWS credentials securely in Bitbucket repository variables
+- Configure S3 bucket permissions according to your organization's security policies
+- Consider using IAM roles instead of access keys for production deployments
+- Implement proper error handling and logging
+
+## 📱 Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📞 Support
+
+For technical support or questions, contact the Digit Insurance Cloud Team.
+
+---
+
+**Built with ❤️ for Digit Insurance Engineering Team**
